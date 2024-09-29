@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YAF.YoTools", "YAF.YoTools\YAF.YoTools.csproj", "{62B035E1-84D1-491E-A55A-770533DD70F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YAF.YoLib", "YAF.YoLib\YAF.YoLib.csproj", "{001F45A1-069A-46B7-9EC7-D9D5880F9514}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{62B035E1-84D1-491E-A55A-770533DD70F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62B035E1-84D1-491E-A55A-770533DD70F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62B035E1-84D1-491E-A55A-770533DD70F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62B035E1-84D1-491E-A55A-770533DD70F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{001F45A1-069A-46B7-9EC7-D9D5880F9514}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{001F45A1-069A-46B7-9EC7-D9D5880F9514}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{001F45A1-069A-46B7-9EC7-D9D5880F9514}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{001F45A1-069A-46B7-9EC7-D9D5880F9514}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {396ED7BD-D695-4165-ABEB-1B021E558A1A}
+	EndGlobalSection
+EndGlobal
