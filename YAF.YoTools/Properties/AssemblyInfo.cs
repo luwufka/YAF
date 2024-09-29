@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набора атрибутов. Измените значения этих атрибутов для изменения сведений,
 // связанные с этой сборкой.
-[assembly: AssemblyTitle("YAF.YoTools")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("YoTools")]
+[assembly: AssemblyDescription("Yo Animation Format Tools")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("YAF.YoTools")]
+[assembly: AssemblyCompany("Icearch Team")]
+[assembly: AssemblyProduct("YoTools")]
 [assembly: AssemblyCopyright("Copyright ©  2024")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

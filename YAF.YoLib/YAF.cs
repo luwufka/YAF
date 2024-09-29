@@ -6,39 +6,38 @@ namespace YAF.YoLib
 {
     public static class YAF
     {
-        public static List<Bitmap> Unpack(byte[] input)
+        public static List<Bitmap> Unpack(byte[] inputData)
         {
-            using (var memoryStream = new MemoryStream(input))
-            using (var reader = new BinaryReader(memoryStream))
+            List<Bitmap> frames = new List<Bitmap>();
+
+            using (BinaryReader reader = new BinaryReader(new MemoryStream(inputData)))
             {
                 Utils.ValidateFormat(reader);
-
-                var frames = new List<Bitmap>();
                 int frameCount = reader.ReadInt32();
 
                 for (int i = 0; i < frameCount; i++)
                 {
-                    Bitmap frame = Utils.ReadFrame(reader);
-                    frames.Add(frame);
+                    frames.Add(Utils.ReadFrame(reader));
                 }
-
-                return frames;
             }
+
+            return frames;
         }
 
         public static byte[] Pack(List<Bitmap> frames)
         {
-            using (var outputStream = new MemoryStream())
-            using (var writer = new BinaryWriter(outputStream))
+            using (MemoryStream memoryStream = new MemoryStream())
             {
-                Utils.WriteHeader(writer, frames.Count);
-
-                foreach (Bitmap frame in frames)
+                using (BinaryWriter writer = new BinaryWriter(memoryStream))
                 {
-                    Utils.WriteFrame(writer, frame);
-                }
+                    Utils.WriteHeader(writer, frames.Count);
 
-                return outputStream.ToArray();
+                    foreach (var frame in frames)
+                    {
+                        Utils.WriteFrame(writer, frame);
+                    }
+                }
+                return memoryStream.ToArray();
             }
         }
     }

@@ -13,29 +13,6 @@ namespace YAF.YoLib
                 throw new Exception("Invalid format! This is not a YAF.");
         }
 
-        public static Bitmap ReadFrame(BinaryReader reader)
-        {
-            int width = reader.ReadInt32();
-            int height = reader.ReadInt32();
-            Bitmap frame = new Bitmap(width, height);
-            byte[] compressedData = reader.ReadBytes(reader.ReadInt32());
-
-            using (var compressedStream = new MemoryStream(compressedData))
-            using (var gzipStream = new GZipStream(compressedStream, CompressionMode.Decompress))
-            {
-                for (int y = 0; y < height; y++)
-                {
-                    for (int x = 0; x < width; x++)
-                    {
-                        int argb = new BinaryReader(gzipStream).ReadInt32();
-                        frame.SetPixel(x, y, Color.FromArgb(argb));
-                    }
-                }
-            }
-
-            return frame;
-        }
-
         public static void WriteHeader(BinaryWriter writer, int frameCount)
         {
             writer.Write(new char[] { 'Y', 'A', 'F' });
@@ -47,31 +24,86 @@ namespace YAF.YoLib
             writer.Write(frame.Width);
             writer.Write(frame.Height);
 
-            byte[] compressedData = CompressFrame(frame);
-            writer.Write(compressedData.Length);
-            writer.Write(compressedData);
+            using (MemoryStream pixelStream = new MemoryStream())
+            {
+                using (BinaryWriter pixelWriter = new BinaryWriter(pixelStream))
+                {
+                    for (int y = 0; y < frame.Height; y++)
+                    {
+                        for (int x = 0; x < frame.Width; x++)
+                        {
+                            Color pixel = frame.GetPixel(x, y);
+                            pixelWriter.Write(pixel.ToArgb());
+                        }
+                    }
+                }
+
+                byte[] pixelData = pixelStream.ToArray();
+
+                using (MemoryStream compressedStream = new MemoryStream())
+                {
+                    using (GZipStream gzipStream = new GZipStream(compressedStream, CompressionMode.Compress))
+                    {
+                        gzipStream.Write(pixelData, 0, pixelData.Length);
+                    }
+
+                    byte[] compressedData = compressedStream.ToArray();
+                    writer.Write(compressedData.Length);
+                    writer.Write(compressedData);
+                }
+            }
         }
 
         public static byte[] CompressFrame(Bitmap frame)
         {
-            using (var compressedStream = new MemoryStream())
-            using (var gzipStream = new GZipStream(compressedStream, CompressionMode.Compress))
+            using (MemoryStream pixelStream = new MemoryStream())
             {
                 for (int y = 0; y < frame.Height; y++)
                 {
                     for (int x = 0; x < frame.Width; x++)
                     {
                         int argb = frame.GetPixel(x, y).ToArgb();
-                        byte[] pixelData = BitConverter.GetBytes(argb);
-                        gzipStream.Write(pixelData, 0, pixelData.Length);
+                        pixelStream.Write(BitConverter.GetBytes(argb), 0, 4);
                     }
                 }
 
-                gzipStream.Flush();
-                return compressedStream.ToArray();
+                using (MemoryStream compressedStream = new MemoryStream())
+                using (GZipStream gzipStream = new GZipStream(compressedStream, CompressionMode.Compress))
+                {
+                    pixelStream.Position = 0;
+                    pixelStream.CopyTo(gzipStream);
+                    gzipStream.Flush();
+                    return compressedStream.ToArray();
+                }
             }
         }
 
+        public static Bitmap ReadFrame(BinaryReader reader)
+        {
+            int width = reader.ReadInt32();
+            int height = reader.ReadInt32();
+            int compressedDataLength = reader.ReadInt32();
+            byte[] compressedData = reader.ReadBytes(compressedDataLength);
 
+            using (MemoryStream compressedStream = new MemoryStream(compressedData))
+            using (GZipStream gzipStream = new GZipStream(compressedStream, CompressionMode.Decompress))
+            {
+                Bitmap frame = new Bitmap(width, height);
+                byte[] pixelData = new byte[4 * width];
+
+                for (int y = 0; y < height; y++)
+                {
+                    int bytesRead = gzipStream.Read(pixelData, 0, pixelData.Length);
+
+                    for (int x = 0; x < width; x++)
+                    {
+                        Color color = Color.FromArgb(BitConverter.ToInt32(pixelData, x * 4));
+                        frame.SetPixel(x, y, color);
+                    }
+                }
+
+                return frame;
+            }
+        }
     }
 }
