@@ -27,12 +27,12 @@ namespace YAF.YoTools
                 }
                 if (main == "--pack")
                 {
-                    File.WriteAllBytes(args[2], YoLib.YAF.Pack(Utils.LoadImages(args[1])));
+                    File.WriteAllBytes(args[2], YoLib.Base.Pack(Utils.LoadImages(args[1])));
                 }
                 if (main == "--extract")
                 {
                     int i = 0;
-                    List<Bitmap> frames = YoLib.YAF.Unpack(File.ReadAllBytes(args[1]));
+                    List<Bitmap> frames = YoLib.Base.Unpack(File.ReadAllBytes(args[1]));
 
                     Directory.CreateDirectory(args[2]);
 
@@ -47,7 +47,7 @@ namespace YAF.YoTools
                     string yafPath = args[1];
                     FileInfo yafFileInfo = new FileInfo(yafPath);
                     int i = 0;
-                    List<Bitmap> frames = YoLib.YAF.Unpack(File.ReadAllBytes(yafPath));
+                    List<Bitmap> frames = YoLib.Base.Unpack(File.ReadAllBytes(yafPath));
 
                     Console.WriteLine($"Size: {yafFileInfo.Length / 1024.0} KB.\n\n[ Frames: ]");
                     foreach (Bitmap frame in frames)

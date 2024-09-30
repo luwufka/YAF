@@ -4,7 +4,7 @@ using System.IO;
 
 namespace YAF.YoLib
 {
-    public static class YAF
+    public static class Base
     {
         public static List<Bitmap> Unpack(byte[] inputData)
         {
